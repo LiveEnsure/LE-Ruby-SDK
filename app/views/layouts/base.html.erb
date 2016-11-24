@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LiveEnsure&reg; SDK</title>
+    <%= csrf_meta_tags %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%= stylesheet_link_tag 'bootstrap.min', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <%= javascript_include_tag 'jquery-1.12.3.min' %>    
+    <%= javascript_include_tag 'bootstrap.min' %>
+    <%= javascript_include_tag 'application' %>        
+  </head>
+
+  <body>
+    <header class="text-center">
+        <h1 class="heading"> LiveEnsure<sup>&reg;</sup> SDK</h1>
+        <!-- <p class="sub-heading"> Real-time authentication solution demo with your mobile device. </p> -->
+    </header>
+    <div id="content">
+      <%= yield %>
+      <div class = "col-sm-3 marginLeft-xs-15">
+        <p> <strong> 2. Scan and Authenticate </strong> </p>
+        <img id="qr-img" src = "">
+        <img style="margin-left: 20px" id="result-img" src = "" class = "marginTop-40">
+      </div>
+      <form class = "col-sm-6">
+        <div class="form-group form-group-modified">
+          <div class="row">
+            <div class="col-sm-12">
+              <h2> Debug Console </h2>
+            </div>
+          </div>    
+          <div class="row row-margin">
+            <div class="col-sm-12"> 
+              <label class ="label-modify" for="url">Host URL:</label>
+              <input value="<%= @host %>" readonly class="form-control form-control-width-change" type="text">
+            </div>
+          </div>
+          <div class="row row-margin">
+            <div class="col-sm-12">
+              <label class ="label-modify" for="request">Request:</label>
+              <textarea id="request-box" class="form-control form-control-width-change" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="row row-margin">
+            <div class="col-sm-12">
+              <label class ="label-modify" for="polling">Polling Status:</label>
+              <input id="polling-status-ip" class="form-control form-control-width-change" type="text">
+            </div>
+          </div>
+          <div class="row row-margin">
+            <div class="col-sm-12">
+              <label class ="label-modify" for="response">Response:</label>
+              <textarea id="response-box" class="form-control form-control-width-change" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <footer class='col-sm-12'>
+          <center>
+              <h6>SDK Version: <%= @version %></h6>
+              <h6> &copy; 2016 LiveEnsure Inc.</h6>
+          </center>
+      </footer>
+    </div>
+    <script>
+        var agentId = "<%= @agent_id %>";
+        var urls = {
+            host: "",
+            initSession: "/authentication/init_session",
+            addPromptChallenge: "/authentication/add_prompt_challenge",
+            addBehaviourChallenge: "/authentication/add_touch_challenge",
+            addLocationChallenge: "/authentication/add_location_challenge",
+            getCode: "/authentication/get_qr_code",
+            pollStatus: "/authentication/poll_status",
+        };
+    </script>
+  </body>
+</html>

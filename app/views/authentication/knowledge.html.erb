@@ -1,0 +1,53 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid" data-no-turbolink>
+		<ul class="nav navbar-nav" id="nav-tabs">
+			<li><a href="/live/device">Device</a></li>
+			<li class="active"><a href="/live/knowledge">Knowledge</a></li>
+			<li><a href="/live/location">Location</a></li>
+			<li><a href="/live/behaviour">Behaviour</a></li>
+		</ul>
+	</div>
+</nav>
+
+<%= content_tag :div, class: "col-sm-3" do -%>		
+	<%= form_tag({controller: "authentication", action: "init_session"}, method: "post", id:"email-form" ) do %>
+	    <%= content_tag :div, class: "form-group form-group-modified" do -%>
+	    	<%= content_tag :div, class: "row" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+		            <%= label_tag(:email, "1. Enter your Email and Challenge") %>
+		            <%= content_tag :div, class: "add-input" do -%>
+			            <%= content_tag(:span, class: "add-on") do -%>
+			            	<%= content_tag(:i, "", class: "fa fa-envelope")-%>
+			            <% end -%>
+			            <%= email_field_tag(:email, "" , class: "form-control form-control-changes") %>
+		            <% end -%>
+	        	<% end -%>
+	        <% end -%>
+	    <% end -%>
+	<% end %>
+	<%= form_tag({controller: "authentication", action: "add_prompt_challenge"}, method: "post", id:"question-form" ) do %>
+	    <%= content_tag :div, class: "form-group form-group-modified" do -%>
+	    	<%= content_tag :div, class: "row row-margin" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+	    			<%= hidden_field_tag(:sessionToken, "" , id: "question-sessionToken") %>
+		            <%= text_field_tag(:question, "" , class: "form-control form-control-decrease-width", placeholder:"Challenge") %>
+		            <%= text_field_tag(:answer, "" , class: "form-control form-control-decrease-width2", placeholder:"PIN") %>
+	            <% end -%>
+	        <% end -%>
+	    	<%= content_tag :div, class: "row" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+	            	<%= submit_tag("Login",class: "btn btn-default pull-right btn-modified marginTop-20 marginRight-5", id: "submit") %>
+	    		<% end -%>
+	        <% end -%>
+	    <% end -%>
+	<% end %>
+<% end -%>
+
+	<script>
+		$(document).ready(function() {
+			$("#submit").click(function(e) {
+				e.preventDefault();
+				makeInitSessionCall().then(addPromptChallenge).then(getQRCode).then(poll);
+			});
+		});
+	</script>

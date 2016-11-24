@@ -1,0 +1,112 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid" data-no-turbolink>
+		<ul class="nav navbar-nav" id="nav-tabs">
+			<li><a href="/live/device">Device</a></li>
+			<li><a href="/live/knowledge">Knowledge</a></li>
+			<li><a href="/live/location">Location</a></li>
+			<li class="active"><a href="/live/behaviour">Behaviour</a></li>
+		</ul>
+	</div>
+</nav>
+<%= content_tag :div, class: "col-sm-3" do -%>		
+	<%= form_tag({controller: "authentication", action: "init_session"}, method: "post", id:"email-form" ) do %>
+	    <%= content_tag :div, class: "form-group form-group-modified" do -%>
+	    	<%= content_tag :div, class: "row" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+		            <%= label_tag(:email, "1. Enter your Email and Challenge") %>
+		            <%= content_tag :div, class: "add-input" do -%>
+			            <%= content_tag(:span, class: "add-on") do -%>
+			            	<%= content_tag(:i, "", class: "fa fa-envelope")-%>
+			            <% end -%>
+			            <%= email_field_tag(:email, "" , class: "form-control form-control-changes") %>
+		            <% end -%>
+	        	<% end -%>	    		     	
+	        <% end -%>
+	    <% end -%>
+	<% end %>
+	<%= form_tag({controller: "authentication", action: "add_touch_challenge"}, method: "post", id:"behaviour-form" ) do %>
+	    <%= content_tag :div, class: "form-group form-group-modified" do -%>
+	    	<%= content_tag :div, class: "row row-margin" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+	    			<%= hidden_field_tag(:sessionToken, "" , id: "b-sessionToken") %>
+	    			<%= hidden_field_tag(:touches, "") %>
+						<label for="orientation1">2. Select orientation</label>
+				    	<select class="form-control" name="orientation" id="orientation1">
+				    		<option value=0>Portrait</option>
+				    		<option value=1>Upside down</option>
+				    		<option value=2>Landscape Left</option>
+				    		<option value=3>Landscape Right</option>
+				    	</select>
+	            <% end -%>
+				<%= content_tag :div, class: "col-sm-12" do -%>
+		            <label for="" style="margin-top: 10px">3. Touch points</label>
+					<div class="row">
+					<div class="col-sm-12" id="portrait">
+						<table class="table table-bordered">
+							<tr><td>1</td><td>2</td></tr>
+							<tr><td>3</td><td>4</td></tr>
+							<tr><td>5</td><td>6</td></tr>
+							
+						</table>
+					</div>
+					<div class="col-sm-5" id="landscape">
+						<table class="table table-bordered">
+							<tr><td>1</td><td>2</td><td>3</td></tr>
+							<tr><td>4</td><td>5</td><td>6</td></tr>
+						</table>
+					</div>
+					</div>
+	        	<% end -%>	            
+	        <% end -%>
+	    	<%= content_tag :div, class: "row" do -%>
+	    		<%= content_tag :div, class: "col-sm-12" do -%>
+	            	<%= submit_tag("Login",class: "btn btn-default pull-right btn-modified marginTop-20 marginRight-5", id: "submit") %>
+	    		<% end -%>
+	        <% end -%>
+	    <% end -%>
+	<% end %>
+<% end -%>
+
+<style>
+	table td:hover {
+		background-color: #81B6D5;
+		color: #fff;
+		cursor: pointer;
+	}
+	table td.clicked {
+		background-color: #2B6282;
+		color: #fff;
+		cursor: pointer;
+	}
+</style>
+<script>
+	var touches = [];
+	$(document).ready(function() {
+
+		$("#submit").click(function(e) {
+			e.preventDefault();
+			makeInitSessionCall().then(addBehaviourChallenge).then(getQRCode).then(poll);
+		});
+		$("table td").click(function() {
+			if($(this).hasClass('clicked')) {
+				touches.splice(touches.indexOf($(this).text()),1);
+				$(this).removeClass("clicked");
+			}else {
+				$(this).addClass("clicked");
+				touches.push($(this).text());
+			}
+			console.log(touches);
+		});
+		$("#landscape").hide();
+		$("#orientation1").change(function() {
+			var val = $(this).val();
+			if(val <= 1) {
+				$("#portrait").show();
+				$("#landscape").hide();
+			} else {
+				$("#portrait").hide();
+				$("#landscape").show();
+			}
+		})
+	});
+</script>

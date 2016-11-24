@@ -1,0 +1,16 @@
+<%= content_tag :div, class: "content" do -%>    
+    <%= content_tag(:p, "Please copy API credentials from your email received from LiveEnsure, paste in below form and save to proceed to the demo.", class: "text-center marginTop-40") -%>
+    <%= form_tag({controller: "settings", action: "create"}, method: "post", class: "col-md-offset-3 col-md-6 text-center marginTop-20") do %>
+        <%= content_tag :div, class: "form-group" do -%>
+            <%= label_tag(:api_key, "API Key:", class: "label-modify") %>
+            <%= text_field_tag(:api_key, "" , class: "form-control form-control-width-change", required: true) %>
+            <%= label_tag(:api_password, "API Password:", class: "label-modify marginTop-20") %>
+            <%= password_field_tag(:api_password, "" , class: "form-control form-control-width-change marginTop-20", required: true) %>
+            <%= label_tag(:agent_id, "Agent ID:", class: "label-modify marginTop-20") %>
+            <%= text_field_tag(:agent_id, "" , class: "form-control form-control-width-change marginTop-20", required: true) %>
+            <%= label_tag(:map_key, "Google Map Key:", class: "label-modify marginTop-20") %>
+            <%= text_field_tag(:map_key, "" , class: "form-control form-control-width-change marginTop-20") %>
+            <%= submit_tag("Save",class: "btn btn-default btn-modified marginTop-20") %>
+        <% end -%>
+    <% end %>
+<% end -%>
