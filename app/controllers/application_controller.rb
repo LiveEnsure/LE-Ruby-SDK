@@ -57,6 +57,6 @@ class ApplicationController < ActionController::Base
 	end
 
 	def create_liveensure_instance
-		@liveensure_api = LiveensureAPI.new(@api_key, @api_password, @agent_id, @host)
+		@liveensure_api = LiveensureApi.new(@api_key, @api_password, @agent_id, @host)
 	end
 end
