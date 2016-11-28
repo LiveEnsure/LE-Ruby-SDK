@@ -1,3 +1,4 @@
+$.ajaxSetup({ cache: false });
 function makeInitSessionCall() {
 	$("#qr-img").attr("src", "//s3.amazonaws.com/clickmeter.com/Web/static/small-loader.gif");
 	appendToRequestBox("/host/session", "PUT")
@@ -63,6 +64,7 @@ function poll() {
 	var dfd = jQuery.Deferred();
 	// $("#result-img").attr("src", "/static/liveensuredemo/img/failure.png");
 	var url = "/host/session/" + localStorage.getItem("sessionToken") + "/" + agentId;
+	var timeout = null;
 	clear = setInterval(function(){
 		appendToRequestBox(url, "GET")
 		$.get(urls.pollStatus, {sessionToken: localStorage.getItem('sessionToken')}, function(response) {
@@ -71,15 +73,24 @@ function poll() {
 			if (response.sessionStatus === "FAILED") {
 				$("#qr-img").attr("src", "/static/liveensuredemo/img/failure.png");
 				clearInterval(clear);
+				clearTimeout(timeout);
 				dfd.resolve();
 			} else if (response.sessionStatus === "SUCCESS") {
 				$("#qr-img").attr("src", "/static/liveensuredemo/img/tick-mark-img.png");
+				clearTimeout(timeout);
 				clearInterval(clear);
 				dfd.resolve();
 			} 
 			appendToResponseBox(url, "GET", JSON.stringify(response, null, 4));
 		});	
 	}, 5000);
+
+	timeout = setTimeout(function() {
+		console.log("clear timeout called");
+		$("#qr-img").attr("src", "/static/liveensuredemo/img/failure.png");
+		clearInterval(clear);
+		dfd.resolve();
+	}, 10000);
 
 	return dfd.promise();
 }

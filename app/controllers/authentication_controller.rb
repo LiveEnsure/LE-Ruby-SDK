@@ -1,7 +1,7 @@
 class AuthenticationController < ApplicationController
 	require "httparty"
 
-	before_action :check_session,:set_required_params
+	before_action :check_session,:set_required_params,:create_liveensure_instance
 	layout "base"
 
 	def device
@@ -21,126 +21,61 @@ class AuthenticationController < ApplicationController
 	end
 
 	def init_session
-        @data = {
-            apiVersion: "5",
-            userId: params[:email],
-            agentId: @agent_id,
-            apiKey: @api_key
-        }
+        result = @liveensure_api.init_session(params[:email])
 
-		@result = HTTParty.put(@host_url + "/host/session",:body => @data.to_json, :headers => {'Content-Type' => 'application/json'})
 		respond_to do |format|
 			format.json { 
-				render json: @result
+				render json: result
 			}
 		end
 	end
 
 	def add_prompt_challenge
-        @details = {question: params[:question],
-                   answer: params[:answer], 
-                   required: "true", 
-                   maximumAttempts: "1"}
-
-        @data = {sessionToken: params[:sessionToken].to_str, 
-                challengeType: "PROMPT", 
-                agentId: @agent_id, 
-                challengeDetails: @details}
-
-
-
-		@result = HTTParty.put(@host_url + "/host/challenge",:body => @data.to_json, :headers => {'Content-Type' => 'application/json'})
-		puts @result
+		result = @liveensure_api.add_prompt_challenge(params[:question], params[:answer], params[:sessionToken].to_str)
+        
 		respond_to do |format|
 			format.json { 
-				render json: @result
+				render json: result
 			}
 		end
 	end
 
 	def add_touch_challenge
-        @details = {orientation: params[:orientation],
-                   touches: params[:touches],
-                   regionCount: "6",
-                   required: "true", 
-                   maximumAttempts: "1"}
-
-        @data = {sessionToken: params[:sessionToken].to_str, 
-                challengeType: "HOST_BEHAVIOR", 
-                agentId: @agent_id, 
-                challengeDetails: @details}
-
-
-
-		@result = HTTParty.put(@host_url + "/host/challenge",:body => @data.to_json, :headers => {'Content-Type' => 'application/json'})
-		puts @result
+		result = @liveensure_api.add_touch_challenge(params[:orientation], params[:touches], params[:sessionToken].to_str)
+        
 		respond_to do |format|
 			format.json { 
-				render json: @result
+				render json: result
 			}
 		end
 	end
 
 	def add_location_challenge
-        @details = {latitude: params[:lat],
-                   longitude: params[:lang],
-                   radius: "10",  
-                   required: "true", 
-                   maximumAttempts: "1"}
-
-        @data = {sessionToken: params[:sessionToken].to_str, 
-                challengeType: "LAT_LONG", 
-                agentId: @agent_id, 
-                challengeDetails: @details}
-
-
-
-		@result = HTTParty.put(@host_url + "/host/challenge",:body => @data.to_json, :headers => {'Content-Type' => 'application/json'})
-		puts @result
+		result = @liveensure_api.add_location_challenge(params[:lat], params[:lang], "10", params[:sessionToken].to_str)
+        
 		respond_to do |format|
 			format.json { 
-				render json: @result
+				render json: result
 			}
 		end
 	end
 
 	def get_qr_code
-		@session_token = params[:sessionToken]
-		@type = 'IMG'
+		result = @liveensure_api.get_auth_object('IMG', params[:sessionToken])
 
-        @qurl = @host + "/QR?w=240&sessionToken=" + @session_token
-        @furl = @host + "/launcher?sessionToken=" + @session_token
-        @liurl = @host + "/launcher?sessionToken=" + @session_token + "&light=1"
-        @lurl = "liveensure://?sessionToken=" + @session_token + "&status=" + @host + "/rest"
-
-        if (@type == "IMG")
-            @result = @qurl
-        elsif (@type == "COMBO")
-            @result = @furl
-        elsif (@type == "LIGHT")
-            @result = @liurl
-        elsif (@type == "LINK")
-            @result = @lurl
-        else
-            @result = "NOTOKEN"
-		end
 		respond_to do |format|
 			format.json { 
-				render json: { link: @result }
+				render json: { link: result }
 			}
 		end
 	end
 
 	def poll_status
-		@session_token = params[:sessionToken]
-
-		@url = @host_url + "/host/session" + "/" + @session_token + "/" + @agent_id
-
-		@result = HTTParty.get(@url)
-
+		result = @liveensure_api.poll_status(params[:sessionToken].to_str)
+		
 		respond_to do |format|
 			format.json { 
-				render json: @result
+				render json: result
 			}
 		end
 	end

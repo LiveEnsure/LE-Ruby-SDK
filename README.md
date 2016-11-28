@@ -1,6 +1,6 @@
 # LiveEnsure Python SDK
 
-This is the LiveEnsure® Python DEMO SDK for LiveEnsure Authentication (www.liveensure.com)
+This is the LiveEnsure® Ruby on rails DEMO SDK for LiveEnsure Authentication (www.liveensure.com)
 >From this SDK you will be able to launch a full API stack in Django and demonstrate the 
 full capabilities of LiveEnsure® Authentication for web, cloud, apps and mobile.
 
@@ -61,24 +61,50 @@ rails server
 
 ### Desktop/Browser Authentication via Mobile Scan
 
-Walk through each factor and how to test/engage desktop with mobile
+Walk through each factor tab and how to test/engage desktop with mobile scan.
 
-```
-Give an examples
-```
+[1] To test to basic device authentication factor, simply click [DEVICE] tab,
+enter your email and click login. Scan screen to authenticate. 
+
+On your first login, you will get an emailed OOB token to enter/register in app.
+
+[2] To test knowledge challenge, click the [Knowledge] tab, enter your email and
+choose a challenge question and anwner/response. This is teeing up the API, as the
+end-user would not see this. Then click and scan, enter response to challenge
+in the device, to authenticate. 
+
+[3] To test location, click the [Location] challenge, enter email and click
+the map to register your current lat/long. If you want location to pass,
+simply login, scan and pass location proximity test. If you want it to fail,
+drag the map to an alternate location, login and fail due to proximity difference.
+
+[4] To test behavior, click the [Behavior] tab and choose an orientation, and a 
+grid pattern (up to 2 places) for single or multi-touch on the device. 
+
+Click login and touch and hold the desired locations AS YOU SCAN, until it beeps. 
+To fail, tap wrong locations on the screen or release before you scan. 
+
+In the demo you can only choose one factor per test, but in the full API SDK
+you can add multiple challenges in combination as needed.
 
 ### App to App Mobile Authentication via App Only
 
-Walk thorugh each factor and how to test/engage from mobile only
+Walk thorugh each factor and how to test/engage from mobile browser to
+the mobile app, from app-to-app (no QR scan).
 
-```
-Give an examples
-```
+First, access the demos from a mobile browser on iOS on Android.
+
+For the mobile demos, repeat the steps as above, except you will rollover
+from mobile browser to app to authenticate after each "login" press/tap.
+
+For behavior, you must hold the touch locations while and until the clock sweeps,
+since there is no scan.
+
+The rest of the demos function as they do in the desktop version.
 
 ## Using the SDK with your own stack/app/code
 
-To use the SDK in your own code, You can copy `api.py` in your own stack. It is a class based
-implementaton of all the api, which internally calls the liveensure API using `requests`.
+To use the SDK in your own code, You can copy `lib/liveensure_api.rb` in your own stack. It is a class based implementaton of all the api, which internally calls the liveensure API using `HTTParty`.
 
 This can be used as follows:
 - Create LiveEnsure object
@@ -91,7 +117,7 @@ This can be used as follows:
   
   # Make sure you have all these keys before you start using the APIs
   
-  liveAuthObj = LiveEnsure("<api_key>", "<api_password>", "<agent_id>", "<host_to_access_api>")
+  liveAuthObj = LiveensureAPI.new("<api_key>", "<api_password>", "<agent_id>", "<host_to_access_api>")
 ```
 
 - Start session
@@ -99,7 +125,7 @@ This can be used as follows:
 ```      
   # email is the userid for which authentication is to be done
 
-  liveAuthObj.initSession("<email>")
+  liveAuthObj.init_session("<email>")
 ```
 
   It will return JSON object which have the `sessionToken`, that will be used in all subsequent calls.
@@ -113,7 +139,7 @@ This can be used as follows:
             # answer is the answer to the question 
             # session Token is the session key that is returned by initSession call.
     
-            liveAuthObj.addPromptChallenge('<question>', '<answer>', '<sessionToken>')
+            liveAuthObj.add_prompt_challenge('<question>', '<answer>', '<sessionToken>')
           ```
 
       It will return json object with status of the API call.
@@ -125,7 +151,7 @@ This can be used as follows:
             # lang is the langitude of the location
             # radius is the radius limit of location authentication
             
-            liveAuthObj.addPromptChallenge('<lat>', '<lang>', <radius>, '<sessionToken>')
+            liveAuthObj.add_location_challenge('<lat>', '<lang>', <radius>, '<sessionToken>')
           ```
 
     * Add behaviour challenge
@@ -139,18 +165,18 @@ This can be used as follows:
             # 3 -> Landscape Right
             
             # touches number of touch points up to 6
-            liveAuthObj.addTouchChallenge('<orientation>', '<touches>', '<sessionToken>')
+            liveAuthObj.add_touch_challenge('<orientation>', '<touches>', '<sessionToken>')
           ```
 - Get the code
 
 ```
-liveAuthObj.getAuthObj("<TYPE>", "<sessionToken>")
+liveAuthObj.get_auth_object("<TYPE>", "<sessionToken>")
 ```
 
 - poll for status
 
 ```      
-liveAuthObj.pollStatus('<sessionToken>')
+liveAuthObj.poll_status('<sessionToken>')
 ```
 
 - delete user
@@ -188,4 +214,3 @@ Visit http://www.liveensure.com for more information.
 * Web: http://www.liveensure.com 
 * Dev: http://developer.liveensure.com
 * Support: http://support.liveensure.com 
-

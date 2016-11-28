@@ -55,4 +55,8 @@ class ApplicationController < ActionController::Base
 		@map_key = get_map_key()
 		@version = VERSION
 	end
+
+	def create_liveensure_instance
+		@liveensure_api = LiveensureAPI.new(@api_key, @api_password, @agent_id, @host)
+	end
 end

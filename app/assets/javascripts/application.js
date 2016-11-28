@@ -81,6 +81,7 @@ function poll() {
 	var dfd = jQuery.Deferred();
 	// $("#result-img").attr("src", "/static/liveensuredemo/img/failure.png");
 	var url = "/host/session/" + localStorage.getItem("sessionToken") + "/" + agentId;
+	var timeout = null;
 	clear = setInterval(function(){
 		appendToRequestBox(url, "GET")
 		$.get(urls.pollStatus, {sessionToken: localStorage.getItem('sessionToken')}, function(response) {
@@ -89,16 +90,24 @@ function poll() {
 			if (response.sessionStatus === "FAILED") {
 				$("#qr-img").attr("src", "/assets/failure.png");
 				clearInterval(clear);
+				clearTimeout(timeout);
+
 				dfd.resolve();
 			} else if (response.sessionStatus === "SUCCESS") {
 				$("#qr-img").attr("src", "/assets/tick-mark-img.png");
 				clearInterval(clear);
+	clearTimeout(timeout);
 				dfd.resolve();
 			} 
 			appendToResponseBox(url, "GET", JSON.stringify(response, null, 4));
 		},'json');	
 	}, 5000);
-
+	timeout = setTimeout(function() {
+		console.log("clear timeout called");
+		$("#qr-img").attr("src", "/assets/failure.png");
+		clearInterval(clear);
+		dfd.resolve();
+	}, 1000 * 2 * 60);
 	return dfd.promise();
 }
 

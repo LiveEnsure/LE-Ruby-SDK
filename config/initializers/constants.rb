@@ -6,4 +6,4 @@ LIVE_ENSURE = {
     "GOOGLE_MAP_KEY": "AIzaSyDL62dUvbzlVHHbc1tZJl2caAUvlrjbB8s"
 }
 
-VERSION = "1.10"
+VERSION = "1.0"
