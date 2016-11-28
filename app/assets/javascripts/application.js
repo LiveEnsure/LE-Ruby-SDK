@@ -96,7 +96,7 @@ function poll() {
 			} else if (response.sessionStatus === "SUCCESS") {
 				$("#qr-img").attr("src", "/assets/tick-mark-img.png");
 				clearInterval(clear);
-	clearTimeout(timeout);
+				clearTimeout(timeout);
 				dfd.resolve();
 			} 
 			appendToResponseBox(url, "GET", JSON.stringify(response, null, 4));
@@ -104,10 +104,10 @@ function poll() {
 	}, 5000);
 	timeout = setTimeout(function() {
 		console.log("clear timeout called");
-		$("#qr-img").attr("src", "/assets/failure.png");
+		$("#qr-img").attr("src", "/assets/timeout.jpg");
 		clearInterval(clear);
 		dfd.resolve();
-	}, 1000 * 2 * 60);
+	}, 1000 * 10);
 	return dfd.promise();
 }
 
