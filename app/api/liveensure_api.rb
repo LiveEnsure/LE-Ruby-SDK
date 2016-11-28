@@ -1,4 +1,4 @@
-class LiveensureAPI
+class LiveensureApi
 	def initialize(api_key, api_password, agent_id, host)
 		@api_key = api_key
 		@api_password = api_password

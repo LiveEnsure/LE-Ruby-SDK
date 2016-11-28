@@ -104,7 +104,7 @@ The rest of the demos function as they do in the desktop version.
 
 ## Using the SDK with your own stack/app/code
 
-To use the SDK in your own code, You can copy `lib/liveensure_api.rb` in your own stack. It is a class based implementaton of all the api, which internally calls the liveensure API using `HTTParty`.
+To use the SDK in your own code, You can copy `app/api/liveensure_api.rb` in your own stack. It is a class based implementaton of all the api, which internally calls the liveensure API using `HTTParty`.
 
 This can be used as follows:
 - Create LiveEnsure object
