@@ -107,7 +107,7 @@ function poll() {
 		$("#qr-img").attr("src", "/assets/timeout.jpg");
 		clearInterval(clear);
 		dfd.resolve();
-	}, 1000 * 10);
+	}, 1000 * 2 * 60);
 	return dfd.promise();
 }
 
