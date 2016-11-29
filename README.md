@@ -1,4 +1,4 @@
-# LiveEnsure Python SDK
+# LiveEnsure Rails SDK
 
 This is the LiveEnsure® Ruby on rails DEMO SDK for LiveEnsure Authentication (www.liveensure.com)
 >From this SDK you will be able to launch a full API stack in Django and demonstrate the 
